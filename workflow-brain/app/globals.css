@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+
+:root {
+  --foreground-rgb: 226, 232, 240;
+  --background-rgb: 15, 23, 42;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: rgb(var(--background-rgb));
+  font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
+/* React Flow override – keep dark */
+.react-flow__renderer,
+.react-flow__background {
+  background: #0f172a !important;
+}

@@ -1,0 +1,9 @@
+# Environment variables
+.env
+.env.local.example
+.env.local
+.env.development
+.env.production
+
+# Node modules
+node_modules/
