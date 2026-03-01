@@ -1,7 +1,8 @@
 import { NextRequest } from "next/server";
 import { connectDB }             from "@/lib/mongodb";
 import { ingestDocument }        from "@/lib/langchain";
-import { extractTextFromPDF, extractTextFromTxt, getFileExtension, ok, err } from "@/lib/utils";
+import { extractTextFromPDF, extractTextFromTxt } from "@/lib/server-utils";
+import { getFileExtension, ok, err } from "@/lib/utils";
 import DocumentModel             from "@/models/Document";
 
 export const runtime = "nodejs";

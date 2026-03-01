@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Card   from "@/components/ui/Card";
 import Badge  from "@/components/ui/Badge";
-import { formatDate } from "@/lib/utils";
+import { formatDate } from "@/lib/client-utils";
 import type { ITask, IDocument, Priority } from "@/types";
 
 const priorityVariant: Record<Priority, "blue" | "green" | "yellow" | "red"> = {

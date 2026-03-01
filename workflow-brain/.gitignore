@@ -1,0 +1,40 @@
+# Environment
+.env.local
+.env.*.local
+.env
+
+# Node
+node_modules
+npm-debug.log
+yarn-error.log
+pnpm-debug.log
+
+# Next.js
+.next
+out
+build
+dist
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+.DS_Store
+
+# OS
+Thumbs.db
+Desktop.ini
+
+# Logs
+logs
+*.log
+
+# Cache
+.cache
+.eslintcache
+
+# Testing
+coverage
+.nyc_output

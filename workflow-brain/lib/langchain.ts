@@ -6,8 +6,8 @@ import type { Citation, QueryResponse }   from "@/types";
 // ── Text splitting ────────────────────────────────────────────────────────────
 export async function splitText(text: string): Promise<string[]> {
   const splitter = new RecursiveCharacterTextSplitter({
-    chunkSize:    800,
-    chunkOverlap: 100,
+    chunkSize:    400,      // Smaller chunks = more detailed retrieval & better explanations
+    chunkOverlap: 80,       // Overlap for context continuity
   });
   return splitter.splitText(text);
 }

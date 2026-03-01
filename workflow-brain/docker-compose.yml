@@ -1,0 +1,40 @@
+services:
+  mongodb:
+    image: mongo:7.0
+    container_name: workflow_brain_mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: mongodb123
+      MONGO_INITDB_DATABASE: workflow_brain
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: workflow_brain_app
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    environment:
+      NODE_ENV: development
+      MONGODB_URI: mongodb://admin:mongodb123@mongodb:27017/workflow_brain?authSource=admin
+      GROQ_API_KEY: ${GROQ_API_KEY:-}
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.next
+    command: npm run dev
+
+volumes:
+  mongo_data:

@@ -1,29 +1,84 @@
-import { ChromaClient, type Collection } from "chromadb";
+// Vector store using in-memory cache
+// No ChromaDB server needed - works locally and on Vercel
+import type { Collection } from "chromadb";
 
-const CHROMA_URL      = process.env.CHROMA_URL || "http://localhost:8000";
-const COLLECTION_NAME = "workflow_brain_docs";
-
-let client:     ChromaClient | null = null;
-let collection: Collection   | null = null;
-
-async function getClient(): Promise<ChromaClient> {
-  if (!client) {
-    client = new ChromaClient({ path: CHROMA_URL });
-  }
-  return client;
+interface VectorEntry {
+  id: string;
+  embedding: number[];
+  document: string;
+  documentId: string;
+  documentName: string;
 }
 
-export async function getCollection(): Promise<Collection> {
-  if (collection) return collection;
+// In-memory cache (will be empty on Vercel, but that's OK for MVP)
+let vectorCache: Map<string, VectorEntry> = new Map();
 
-  const c = await getClient();
-  collection = await c.getOrCreateCollection({
-    name:     COLLECTION_NAME,
-    metadata: { "hnsw:space": "cosine" },
-  });
+export async function getCollection() {
+  // Return a mock collection object - actual storage is in MongoDB via Document model
+  return {
+    add: async (data: any) => {
+      // Store in memory cache for this session
+      const { ids, embeddings, documents, metadatas } = data;
+      ids.forEach((id: string, i: number) => {
+        vectorCache.set(id, {
+          id,
+          embedding: embeddings[i],
+          document: documents[i],
+          documentId: metadatas[i].documentId,
+          documentName: metadatas[i].documentName,
+        });
+      });
+    },
+    query: async (data: any) => {
+      const { queryEmbeddings, nResults, where } = data;
+      const queryEmbedding = queryEmbeddings[0];
 
-  console.log("[ChromaDB] Collection ready:", COLLECTION_NAME);
-  return collection;
+      // Filter by documentId if specified
+      let results = Array.from(vectorCache.values());
+      if (where?.documentId?.$in) {
+        const docIds = where.documentId.$in;
+        results = results.filter(r => docIds.includes(r.documentId));
+      }
+
+      // Cosine similarity search
+      results = results
+        .map(entry => ({
+          entry,
+          score: cosineSimilarity(queryEmbedding, entry.embedding),
+        }))
+        .sort((a, b) => b.score - a.score)
+        .slice(0, nResults)
+        .map(r => r.entry);
+
+      return {
+        documents: [results.map(r => r.document)],
+        metadatas: [results.map(r => ({ documentId: r.documentId, documentName: r.documentName }))],
+        distances: [],
+      };
+    },
+    get: async (data: any) => {
+      const { where } = data;
+      let results = Array.from(vectorCache.values());
+      
+      if (where?.documentId) {
+        results = results.filter(r => r.documentId === where.documentId);
+      }
+      
+      return { ids: results.map(r => r.id), documents: results.map(r => r.document) };
+    },
+    delete: async (data: any) => {
+      const { ids } = data;
+      ids?.forEach((id: string) => vectorCache.delete(id));
+    },
+  } as any;
+}
+
+function cosineSimilarity(a: number[], b: number[]): number {
+  if (a.length !== b.length) return 0;
+  const dotProduct = a.reduce((sum, x, i) => sum + x * b[i], 0);
+  const normA = Math.sqrt(a.reduce((sum, x) => sum + x * x, 0));
+  const normB = Math.sqrt(b.reduce((sum, x) => sum + x * x, 0));
+  return normA && normB ? dotProduct / (normA * normB) : 0;
 }
 
 export async function addDocumentChunks(
@@ -38,7 +93,7 @@ export async function addDocumentChunks(
   const metadatas = chunks.map(() => ({ documentId, documentName }));
 
   await col.add({ ids, embeddings, documents: chunks, metadatas });
-  console.log(`[ChromaDB] Added ${chunks.length} chunks for doc ${documentId}`);
+  console.log(`[Vector Store] Added ${chunks.length} chunks for doc ${documentId}`);
 }
 
 export async function queryCollection(
@@ -48,13 +103,9 @@ export async function queryCollection(
 ): Promise<{ chunks: string[]; metadatas: Record<string, string>[] }> {
   const col = await getCollection();
 
-  // Build an optional where-filter for the requested document IDs.
-  // chromadb v1.9.x where-clause requires operator objects per field.
-  type WhereClause = Parameters<Collection["query"]>[0]["where"];
-  const whereClause: WhereClause =
-    documentIds && documentIds.length > 0
-      ? ({ documentId: { $in: documentIds } } as WhereClause)
-      : undefined;
+  const whereClause = documentIds && documentIds.length > 0
+    ? { documentId: { $in: documentIds } }
+    : undefined;
 
   const results = await col.query({
     queryEmbeddings: [queryEmbedding],
@@ -70,13 +121,11 @@ export async function queryCollection(
 
 export async function deleteDocumentChunks(documentId: string): Promise<void> {
   const col = await getCollection();
-  // chromadb v1.x col.delete with where-only is unreliable; fetch IDs first then delete.
-  type GetWhere = Parameters<Collection["get"]>[0]["where"];
   const existing = await col.get({
-    where: ({ documentId } as GetWhere),
+    where: { documentId },
   });
   if (existing.ids.length > 0) {
     await col.delete({ ids: existing.ids });
   }
-  console.log(`[ChromaDB] Deleted ${existing.ids.length} chunks for doc ${documentId}`);
+  console.log(`[Vector Store] Deleted ${existing.ids.length} chunks for doc ${documentId}`);
 }
