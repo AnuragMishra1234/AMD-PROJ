@@ -1,4 +1,4 @@
-# WorkflowBrain 🧠
+# WorkflowBrain
 
 An AI-powered productivity web application combining a RAG-based research assistant, task extraction, and workflow visualization.
 
@@ -6,28 +6,28 @@ An AI-powered productivity web application combining a RAG-based research assist
 
 ---
 
-## Features ✨
+## Features 
 
-### 📚 Research Copilot (RAG)
+###  Research Copilot (RAG)
 - Upload PDF/TXT/MD documents
 - Ask natural-language questions
 - Get AI-powered answers with citations
 - Vector search on document chunks
 
-### 🎯 Smart Task Extractor
+###  Smart Task Extractor
 - Paste meeting notes or emails
 - AI automatically extracts actionable tasks
 - Set priorities (low → critical)
 - Track deadlines
 - Mark completion
 
-### 📊 Dashboard
+###  Dashboard
 - Task statistics and overview
 - Critical tasks list
 - Recent documents
 - Task list table
 
-### 🔗 Workflow Graph
+###  Workflow Graph
 - Visual representation of your workflow
 - Interactive graph with React Flow
 - Shows documents, tasks, and deadlines
@@ -36,7 +36,7 @@ An AI-powered productivity web application combining a RAG-based research assist
 
 ---
 
-## Tech Stack 🛠️
+## Tech Stack 
 
 | Layer | Tech |
 |-------|------|
@@ -49,7 +49,7 @@ An AI-powered productivity web application combining a RAG-based research assist
 
 ---
 
-## Quick Start 🚀
+## Quick Start 
 
 ### Local Development
 
@@ -112,7 +112,7 @@ Open http://localhost:3000 (or the suggested port)
 
 ---
 
-## Deployment 🌍
+## Deployment 
 
 ### Deploy to Vercel (Recommended)
 
@@ -147,7 +147,7 @@ NODE_ENV=production
 
 ---
 
-## Project Structure 📁
+## Project Structure 
 
 ```
 workflow-brain/
@@ -202,7 +202,7 @@ workflow-brain/
 
 ---
 
-## Configuration 🔧
+## Configuration 
 
 ### Environment Variables
 
@@ -225,7 +225,7 @@ chunkOverlap: 80      // Context continuity
 
 ---
 
-## Limitations & Future Work 🔮
+## Limitations & Future Work 
 
 ### Current (MVP)
 - ✅ Local vector store (works for <100 documents)
@@ -243,7 +243,7 @@ chunkOverlap: 80      // Context continuity
 
 ---
 
-## Performance Notes ⚡
+## Performance Notes 
 
 ### Local Development
 - Warm start: ~500ms
@@ -262,7 +262,7 @@ chunkOverlap: 80      // Context continuity
 
 ---
 
-## Troubleshooting 🐛
+## Troubleshooting 
 
 ### Build Fails
 ```bash
@@ -286,7 +286,7 @@ Dev server auto-tries next port (3001, 3002, etc.)
 
 ---
 
-## Performance Monitoring 📊
+## Performance Monitoring 
 
 ### Local
 ```bash
@@ -309,7 +309,7 @@ npx vercel logs workflow-brain --tail
 
 ---
 
-## Security 🔒
+## Security 
 
 ### Already Implemented
 - ✅ API key validation
@@ -326,7 +326,7 @@ npx vercel logs workflow-brain --tail
 
 ---
 
-## Contributing 🤝
+## Contributing 
 
 Want to improve WorkflowBrain?
 
@@ -338,24 +338,24 @@ Want to improve WorkflowBrain?
 
 ---
 
-## License 📄
+## License 
 
 MIT License - feel free to use this project!
 
 ---
 
-## Support & Questions ❓
+## Support & Questions 
 
-- 📖 Read [DEPLOYMENT.md](./DEPLOYMENT.md) for deployment help
-- ✅ Check [DEPLOYMENT_CHECKLIST.md](./DEPLOYMENT_CHECKLIST.md) before going live
-- 📚 See [LOCAL_SETUP.md](./LOCAL_SETUP.md) for local development
-- 🙋 GitHub Issues for bugs and features
+-  Read [DEPLOYMENT.md](./DEPLOYMENT.md) for deployment help
+-  Check [DEPLOYMENT_CHECKLIST.md](./DEPLOYMENT_CHECKLIST.md) before going live
+-  See [LOCAL_SETUP.md](./LOCAL_SETUP.md) for local development
+-  GitHub Issues for bugs and features
 
 ---
 
-## Roadmap 🗺️
+## Roadmap 
 
-### Phase 1: MVP (Current) ✅
+### Phase 1: MVP (Current) 
 - Document upload & RAG
 - Task extraction
 - Workflow visualization
@@ -374,12 +374,11 @@ MIT License - feel free to use this project!
 
 ---
 
-## Built with ❤️
 
-Made with [Next.js](https://nextjs.org), [Groq](https://groq.com), and ☕ coffee.
+Made with [Next.js](https://nextjs.org), [Groq](https://groq.com), and coffee.
 
 ---
 
-**Made for productivity. Built for scale. Ready for deployment.** 🚀
+**Made for productivity. Built for scale. Ready for deployment.** 
 
-[🚀 Deploy Now](#deployment) | [📖 Read Docs](./DEPLOYMENT.md) | [✅ Checklist](./DEPLOYMENT_CHECKLIST.md)
+[ Deploy Now](#deployment) | [📖 Read Docs](./DEPLOYMENT.md) | [✅ Checklist](./DEPLOYMENT_CHECKLIST.md)
